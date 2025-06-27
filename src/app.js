@@ -1,33 +1,29 @@
 const express = require("express");
-
+const connectDB = require("./config/database");
 const app = express();
+const User = require("./models/user");
 
-app.get("/users", (req, res) => {
-  res.send({
-    firstname: "Prasanna",
-    lastname: "wankhede",
+app.post("/signup", async (req, res) => {
+  const userObj = {
+    firstName: "virat",
+    lastName: "kohli",
+    emailId: "king@@@",
+    password: "ff4dfddd21",
+  };
+
+  const user = new User(userObj);
+  await user.save();
+
+  res.send("User added successfully");
+});
+
+connectDB()
+  .then(() => {
+    console.log("Database Connection Established");
+    app.listen(3000, () => {
+      console.log("server is successfully listening on port number  3000... ");
+    });
+  })
+  .catch((err) => {
+    console.error("Dtatbase connot be connected");
   });
-});
-
-app.post("/users", (req, res) => {
-  res.send("data Saved Successfully ");
-});
-
-// app.use("/hello/2", (req, res) => {
-//   res.send("hello - 2");
-// });
-// app.use("/hello", (req, res) => {
-//   res.send("hello");
-// });
-
-// app.use("/", (req, res) => {
-//   res.send("Welcome  ");
-// });
-
-// app.use((req, res) => {
-//   res.send("hello from my   server");
-// });
-
-app.listen(3000, () => {
-  console.log("server is successfully listening on port number  3000... ");
-});

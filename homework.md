@@ -169,3 +169,53 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
+
+
+Project Learnings - MongoDB + Mongoose + Express (Q&A)
+
+1️⃣ How to create a free cluster?Go to https://www.mongodb.com/cloud/atlas, sign up, create a free shared cluster, and get your SRV connection string.
+
+2️⃣ How to install Mongoose?Run npm install mongoose in your Node.js project.
+
+3️⃣ How to connect to the database?Use Mongoose's connect method with your connection URL in a connectDB function. Example:
+
+const mongoose = require("mongoose");
+const connectDB = async () => {
+  await mongoose.connect("mongodb+srv://<username>:<password>@cluster0.mongodb.net/devTinder");
+};
+module.exports = connectDB;
+
+4️⃣ When to call connectDB?Call it before starting your Express app. Example:
+
+connectDB().then(() => {
+  app.listen(7777, () => console.log("Server running"));
+});
+
+5️⃣ How to create a userSchema and model?
+
+const mongoose = require("mongoose");
+const userSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  emailId: String,
+  password: String,
+});
+module.exports = mongoose.model("User", userSchema);
+
+6️⃣ How to make POST /signup API?
+
+app.post("/signup", async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    res.send("User added successfully");
+  } catch (err) {
+    res.status(500).send("Error saving user");
+  }
+});
+
+7️⃣ How to push documents?Use Postman to call POST /signup with JSON body.
+
+8️⃣ How to handle errors?Wrap DB operations in try...catch to catch and handle save errors gracefully.
+

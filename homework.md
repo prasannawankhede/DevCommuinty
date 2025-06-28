@@ -353,3 +353,107 @@ app.patch("/user", async (req, res) => {
 });
 
 ```
+
+# ✅ User Schema — Questions & Answers
+
+---
+
+## 📌 1. Explore `SchemaType` Options from the Documentation
+
+**Answer:**  
+Mongoose `SchemaType` options define how each field in your schema behaves and how Mongoose validates it before saving to the database. Common options include:
+
+- `required` to make a field mandatory.
+- `unique` to ensure values don’t repeat across documents.
+- `lowercase` to automatically convert strings to lowercase.
+- `trim` to remove extra spaces.
+- `min` and `max` for numeric ranges.
+- `minLength` and `maxLength` for string length constraints.
+
+---
+
+## 📌 2. Add `required`, `unique`, `lowercase`, `min`, `minLength`, `trim`
+
+**Answer:**  
+These schema options should be applied to appropriate fields to ensure data is valid and clean:
+
+- Use `required` for fields like `firstName`, `emailId`, and `password` to make them mandatory.
+- Use `unique` for `emailId` to prevent duplicate emails.
+- Use `lowercase` for `emailId` so it’s always stored in lowercase.
+- Use `trim` for names and about fields to remove unnecessary spaces.
+- Use `min` for numeric fields like `age` to ensure valid values.
+- Use `minLength` for strings like `password` to enforce minimum length.
+
+---
+
+## 📌 3. Add `default`
+
+**Answer:**  
+A `default` value provides fallback data when no value is provided for a field. It ensures the field is never empty and has a sensible default, like a placeholder image for `photoUrl` or a default bio for `about`.
+
+---
+
+## 📌 4. Create a Custom Validate Function for `gender`
+
+**Answer:**  
+A custom validator ensures that the `gender` field only accepts specific allowed values, like “male”, “female”, or “other”. This helps maintain consistent data and avoids invalid entries.
+
+---
+
+## 📌 5. Improve the DB Schema — Add Appropriate Validations
+
+**Answer:**  
+The schema should use all suitable Mongoose validation options and the `validator` library to make sure each field stores only valid and clean data. Validations should cover strings, numbers, formats, and value ranges to avoid bad or incomplete data.
+
+---
+
+## 📌 6. Add `timestamps` to the `userSchema`
+
+**Answer:**  
+Enabling `timestamps` in Mongoose automatically adds `createdAt` and `updatedAt` fields to each document. This helps track when each record was created and last updated, which is useful for auditing and sorting.
+
+---
+
+## 📌 7. Add API-Level Validation on `PATCH` Requests & `Signup` POST API
+
+**Answer:**  
+Validation should also happen at the API layer, not just the database. Using libraries like `express-validator` helps check incoming request data for required fields, correct formats, minimum lengths, and sanitization **before** it even reaches the database.
+
+---
+
+## 📌 8. Data Sanitizing — Add API Validation for Each Field
+
+**Answer:**  
+Always sanitize user input at the API level to remove unwanted spaces, normalize emails, and escape potentially harmful characters. This prevents invalid or unsafe data from being stored and helps protect against injection attacks.
+
+---
+
+## 📌 9. Install `validator`
+
+**Answer:**  
+The `validator` library is a popular Node.js tool for checking and sanitizing strings. It provides built-in functions to validate email addresses, URLs, passwords, and more. It should be installed and used for schema validation and API checks.
+
+---
+
+## 📌 10. Explore `validator` Library Functions and Use Them for `password`, `email`, `photoUrl`
+
+**Answer:**  
+Use `validator` functions to:
+
+- Check if `emailId` is in valid email format.
+- Validate that `photoUrl` is a proper URL.
+- Enforce strong passwords that meet security standards.
+  Validator functions reduce the chance of invalid data entering the system.
+
+---
+
+## 📌 11. ⚠️ NEVER TRUST `req.body`
+
+**Answer:**  
+Always remember that client input can’t be trusted by default. Never directly use `req.body` values without validation and sanitization. Always run input through validators and sanitizers to protect the database and your application from bad or malicious data.
+
+---
+
+# ✅ That’s it!
+
+Keep these best practices in mind to maintain a clean, secure, and robust database design with Mongoose and Node.js.

@@ -5,6 +5,10 @@ const User = require("./models/user");
 app.use(express.json());
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 
 app.post("/signup", async (req, res) => {
   try {
@@ -34,19 +38,40 @@ app.post("/login", async (req, res) => {
 
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
-      throw new Error("invalid credentials");
+      throw new Error("Invalid credentials");
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (isPasswordValid) {
-      res.send("login successfullll");
-    } else {
-      throw new Error("invalid credentials");
+    const isPasswordValid = await user.validatePassword(password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid credentials");
     }
+
+    const token = user.getJWT(); // ✅ your method works
+
+    res.cookie("token", token, { httpOnly: true });
+    res.send("Login successful!");
   } catch (err) {
-    res.status(404).send("Error" + err.message);
+    res.status(401).send("Error: " + err.message);
   }
+});
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.send({
+      message: "Profile fetched successfully",
+      user: user,
+    });
+  } catch (err) {
+    res.status(500).send("error: " + err.message);
+  }
+});
+
+app.post("/sendConnectionRequest", userAuth, (req, res) => {
+  user = req.user;
+
+  res.send(user.firstName + " is sending connection request");
 });
 
 app.get("/feed", async (req, res) => {

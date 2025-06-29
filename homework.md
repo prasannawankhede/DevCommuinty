@@ -457,3 +457,88 @@ Always remember that client input can’t be trusted by default. Never directly 
 # ✅ That’s it!
 
 Keep these best practices in mind to maintain a clean, secure, and robust database design with Mongoose and Node.js.
+
+# ✅ Auth & Cookies — Questions & Answers
+
+---
+
+## 📌 1. Install `cookie-parser`
+
+**Answer:**  
+`cookie-parser` is a middleware for Express that makes it easy to read and set cookies in HTTP requests and responses. Install it to handle cookies securely.
+
+---
+
+## 📌 2. Just Send a Dummy Cookie to User
+
+**Answer:**  
+To test cookies, send a dummy cookie (like a test key-value pair) in a response. This ensures your cookie setup works before adding JWT tokens.
+
+---
+
+## 📌 3. Create `GET /profile` API and Check if You Get the Cookie Back
+
+**Answer:**  
+Create a `/profile` route that reads cookies from incoming requests. This verifies that the cookie was set properly and is returned by the browser or API client.
+
+---
+
+## 📌 4. Install `jsonwebtoken`
+
+**Answer:**  
+`jsonwebtoken` (JWT) is a library for creating and verifying JSON Web Tokens. JWTs are used for stateless authentication — meaning no session storage is needed on the server.
+
+---
+
+## 📌 5. In `login` API, After Email and Password Validation, Create a JWT Token and Send It in Cookies
+
+**Answer:**  
+After successfully checking the user’s credentials, generate a JWT token containing the user’s ID or relevant data. Send this token to the user in a secure cookie for use in future authenticated requests.
+
+---
+
+## 📌 6. Read the Cookies Inside Your `profile` API and Find the Logged-In User
+
+**Answer:**  
+When a request hits `/profile`, extract the JWT from the cookie, verify it, and get the user’s ID. Use this ID to fetch and return the user’s details from the database.
+
+---
+
+## 📌 7. `userAuth` Middleware
+
+**Answer:**  
+The `userAuth` middleware reads the JWT from the request cookies, verifies it, and attaches the user’s information to `req.user`. This makes it easy to protect routes that require authentication.
+
+---
+
+## 📌 8. Add `userAuth` Middleware to `profile` API and `sendConnectionRequest` API
+
+**Answer:**  
+Apply the `userAuth` middleware to any API route that needs the user to be logged in. This ensures only authenticated users can access actions like viewing profiles or sending connection requests.
+
+---
+
+## 📌 9. Set the Expiry of JWT Token and Cookies to 7 Days
+
+**Answer:**  
+Set the JWT to expire in 7 days for better security and user experience. Also, set the cookie’s expiry to match the token lifespan so the user stays logged in for the same period.
+
+---
+
+## 📌 10. Create `userSchema` Method to `getJWT()`
+
+**Answer:**  
+Add a method to your Mongoose `userSchema` that generates and returns a signed JWT containing the user’s ID. This keeps token generation reusable and clean.
+
+---
+
+## 📌 11. Create `userSchema` Method to `comparePassword(passwordInputByUser)`
+
+**Answer:**  
+Add a method to your Mongoose `userSchema` that checks if the input password matches the hashed password stored in the database. This is used during login to verify the user’s credentials securely.
+
+---
+
+# ✅ That’s it!
+
+With these steps, your Node.js app will handle cookies, JWT auth, and secure protected routes using best practices.
